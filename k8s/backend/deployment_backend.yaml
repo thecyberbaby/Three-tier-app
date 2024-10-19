@@ -1,19 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata: 
+metadata:
   name: backend-3-tier
-  namespace: three-tier
-  labels: 
-    role: api
-    env: demo
-spec: 
-  replicas: 2
-  strategy: 
+spec:
+  replicas: 1
+  strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 25%
-  selector: 
+  selector:
     matchLabels:
       role: api
   template:
@@ -39,8 +35,8 @@ spec:
                 name: mongo-sec
                 key: password
         ports:
-        - containerPort: 3500
-        livenessProbe: 
+          - containerPort: 3500
+        livenessProbe:
           httpGet:
             path: /ok
             port: 3500
@@ -53,3 +49,4 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
           successThreshold: 1
+          

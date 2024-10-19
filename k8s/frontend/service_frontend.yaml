@@ -4,11 +4,8 @@ metadata:
   name: frontend-service
 spec:
   selector:
-    app: frontend-3-tier
+    app: frontend-3-tier  # Ensure this matches the labels in your frontend pod
   ports:
-    - protocol: TCP
-      port: 80
+    - name: http
+      port: 3000
       targetPort: 3000
-      nodePort: 30002
-  type: NodePort  # Change to 'ClusterIP' if you don't need external access
-  

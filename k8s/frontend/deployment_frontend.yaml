@@ -2,9 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-3-tier
-  namespace: three-tier
-  annotations:
-    instrumentation.opentelemetry.io/inject-nodejs: "openobserve-collector/openobserve"
 spec:
   replicas: 1
   strategy:
@@ -21,7 +18,11 @@ spec:
         app: frontend-3-tier
     spec:
       containers:
-        - name: frontend
-          image: thecyberbaby/frontend:1.0
-          ports:
-            - containerPort: 3000
+      - name: frontend
+        image: thecyberbaby/frontend:1.0
+        imagePullPolicy: Always
+        env:
+          - name: REACT_APP_BACKEND_URL
+            value: "http://thecyberbaby/api/tasks"
+        ports:
+          - containerPort: 3000
