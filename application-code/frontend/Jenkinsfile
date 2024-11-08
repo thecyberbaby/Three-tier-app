@@ -16,7 +16,7 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t thecyberbaby/frontend-dev:$BUILD_NUMBER ./application-code/frontend"
+                sh "docker build -t thecyberbaby/frontend:$BUILD_NUMBER ./application-code/frontend"
                 echo 'Build Image Completed'
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         // Uncomment the Trivy Scan stage when ready
         // stage('Trivy Scan') {
         //     steps {
-        //         sh 'trivy image --no-progress --severity HIGH,CRITICAL thecyberbaby/frontend-dev:$BUILD_NUMBER'
+        //         sh 'trivy image --no-progress --severity HIGH,CRITICAL thecyberbaby/frontend:$BUILD_NUMBER'
         //     }
         // }
         
