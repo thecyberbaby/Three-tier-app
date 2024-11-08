@@ -95,7 +95,7 @@ To get started, follow these steps to build and deploy the application:
       $ cd backend
       $ kubectl apply -f .
       
-      then for frontend
+      "then for frontend"
 
       $ cd ../ && cd frontend
       $ kubectl apply -f .
