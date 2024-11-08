@@ -2,14 +2,13 @@ pipeline {
     agent any
     
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred') 
-        // PATH = "/bin:/usr/bin:/usr/local/bin:$PATH"
+        DOCKERHUB_CREDENTIALS = credentials('hub.docker.com') 
     }
     
     stages {
         stage("Git Checkout") {
             steps {
-                git credentialsId: 'github', url: 'https://github.com/thecyberbaby/three-tier-app.git'
+                git url: 'https://github.com/thecyberbaby/three-tier-app.git', branch: 'main'
                 echo 'Git Checkout Completed'
                 sh "lsb_release -a"
             }
@@ -17,25 +16,27 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t thecyberbaby/frontend-dev:$BUILD_NUMBER ./frontend"
+                sh "docker build -t thecyberbaby/frontend-dev:$BUILD_NUMBER ./application-code/frontend"
                 echo 'Build Image Completed'
             }
         }
         
-                stage('Trivy Scan') {
-            steps {
-                sh 'trivy image --no-progress --severity HIGH,CRITICAL thecyberbaby/frontend-dev:$BUILD_NUMBER'
-            }
-        }
+        // Uncomment the Trivy Scan stage when ready
+        // stage('Trivy Scan') {
+        //     steps {
+        //         sh 'trivy image --no-progress --severity HIGH,CRITICAL thecyberbaby/frontend-dev:$BUILD_NUMBER'
+        //     }
+        // }
         
-        stage('Login to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKERHUB_CREDENTIALS_USR', passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW')]) {
-                    sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
-                    echo 'Login Completed'
-                }
-            }
-        }
+        // Uncomment the Login to Docker Hub stage when ready
+        // stage('Login to Docker Hub') {
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'hub.docker.com', usernameVariable: 'DOCKERHUB_CREDENTIALS_USR', passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW')]) {
+        //             sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+        //             echo 'Login Completed'
+        //         }
+        //     }
+        // }
         
         stage('Push Image to Docker Hub') {
             steps {
@@ -48,15 +49,6 @@ pipeline {
     post {
         always {
             sh 'docker logout'
-            emailext(
-                    subject: "Build Status: ${currentBuild.currentResult}",
-                    body: """
-                        Build Number: ${env.BUILD_NUMBER}
-                        Build Status: ${currentBuild.currentResult}
-                        Build URL: ${env.BUILD_URL}
-                    """,
-                    to: 'sharmanishu.dev@gmail.com'
-                )
         }
     }
 }
