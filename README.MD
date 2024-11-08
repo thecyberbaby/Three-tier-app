@@ -94,10 +94,13 @@ To get started, follow these steps to build and deploy the application:
       ```bash
       $ cd backend
       $ kubectl apply -f .
-      then 
+      
+      then for frontend
+
       $ cd ../ && cd frontend
       $ kubectl apply -f .
       ```
+      perform same for database also if needed
 
 ## Usage
 
