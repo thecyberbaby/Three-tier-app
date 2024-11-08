@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: thecyberbaby/frontend:1.0
+        image: thecyberbaby/frontend:20
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
