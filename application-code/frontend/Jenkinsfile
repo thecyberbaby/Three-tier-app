@@ -21,26 +21,20 @@ pipeline {
             }
         }
         
-        // Uncomment the Trivy Scan stage when ready
         // stage('Trivy Scan') {
         //     steps {
-        //         sh 'trivy image --no-progress --severity HIGH,CRITICAL thecyberbaby/frontend:$BUILD_NUMBER'
+        //         sh 'trivy image --no-progress --severity HIGH,CRITICAL thecyberbaby/frontend-dev:$BUILD_NUMBER'
         //     }
         // }
         
-        // Uncomment the Login to Docker Hub stage when ready
-        // stage('Login to Docker Hub') {
-        //     steps {
-        //         withCredentials([usernamePassword(credentialsId: 'hub.docker.com', usernameVariable: 'DOCKERHUB_CREDENTIALS_USR', passwordVariable: 'DOCKERHUB_CREDENTIALS_PSW')]) {
-        //             sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
-        //             echo 'Login Completed'
-        //         }
-        //     }
-        // }
-        
-        stage('Push Image to Docker Hub') {
+        stage('Push to Docker Hub') {
             steps {
-                sh "docker push thecyberbaby/frontend:$BUILD_NUMBER"
+                script {
+                    // Using docker.withRegistry to handle authentication securely without exposing creds
+                    docker.withRegistry('https://index.docker.io/v1/', 'hub.docker.com') {
+                        sh "docker push thecyberbaby/frontend:$BUILD_NUMBER"
+                    }
+                }
                 echo 'Push Image Completed'
             }
         }
@@ -48,7 +42,7 @@ pipeline {
     
     post {
         always {
-            sh 'docker logout'
+            sh 'docker logout || true'
         }
     }
 }
