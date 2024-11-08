@@ -11,7 +11,6 @@ Welcome to the **Three Tier App** repository! This project is a scalable and mod
 5. [Installation & Setup](#installation-setup)
 6. [Usage](#usage)
 7. [Contributing](#contributing)
-8. [License](#license)
 
 ## Project Structure
 
@@ -36,10 +35,10 @@ The **`application-code/`** directory contains the code for both the **Frontend*
 The **`helm/`** directory contains Helm charts that help deploy and manage the infrastructure components required for the Three Tier App. These charts simplify the deployment process and allow for easy configuration of application-related resources.
 
 ### How Helm Charts are Organized:
-- **Ingress/Service:** For routing traffic into the application.
-- **Deployment/StatefulSet:** For scaling the app and ensuring high availability.
-- **Secrets/ConfigMaps:** For managing application configurations securely.
-- **Persistent Volumes:** For data persistence, especially for the database tier.
+- **nginx-ingress:** For routing traffic into the cluster.
+- **grafana:** For deploying grafana.
+- **prometheus** For deploying prometheus.
+- **loki** For deploying loki.
 
 You can use these Helm charts to deploy the application across various environments with minimal configuration.
 
@@ -48,11 +47,12 @@ You can use these Helm charts to deploy the application across various environme
 The **`k8s/`** directory contains the Kubernetes manifests that are used to deploy the Three Tier App to a Kubernetes cluster. These manifests define the necessary resources like Pods, Services, Deployments, ConfigMaps, Secrets, and Persistent Volumes.
 
 ### Structure of the Kubernetes Manifests:
-- **Deployment.yaml** - Defines how the application should be deployed on Kubernetes.
-- **Service.yaml** - Specifies the network accessibility of the application within the cluster.
-- **ConfigMap.yaml** - Stores non-sensitive configuration values for the app.
-- **Secret.yaml** - Stores sensitive configuration values securely.
-- **PersistentVolume.yaml** - Ensures data persistence across pod restarts.
+- **backend/deployment_backend.yaml** - Defines how the application should be deployed on Kubernetes.
+- **backend/service_backend.yaml** - Defined how application should be expose to the network.
+- **frontend/deployment_frontend.yaml** - Defines how the application should be deployed on Kubernetes.
+- **frontend/service_frontend.yaml** - Defined how application should be expose to the network.
+- **databaseend/deployment_frontend.yaml** - Defines how the mongo DB should be deployed on Kubernetes.
+- **database/service_frontend.yaml** - Defined how mongo DB should be expose to the network.
 
 ## Installation & Setup
 
@@ -67,7 +67,7 @@ To get started, follow these steps to build and deploy the application:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/three-tier-app.git
+    git clone https://github.com/thecyberbaby/three-tier-app.git
     cd three-tier-app
     ```
 
@@ -76,17 +76,27 @@ To get started, follow these steps to build and deploy the application:
     - Building the application
     - Running it locally or in Docker containers.
 
-3. Deploy the infrastructure using Helm:
+3. Deploy the application using Helm:
     - Navigate to the **`helm/`** directory.
-    - Run the following Helm commands to deploy the required infrastructure components (e.g., services, databases, etc.):
+    - Run the following Helm commands to deploy the required applications components (e.g., ingress, prometheus, etc.):
       ```bash
-      helm install my-app ./helm/my-chart
+      $ helm install ingress ./helm/inginx-ingress
+      or
+      $ helm install prometheus ./helm/prometheus
+      or
+      $ helm install grafana ./helm/grafana
+
+
       ```
 
 4. Deploy the application using Kubernetes manifests:
     - Apply the Kubernetes manifests in the **`k8s/`** directory to deploy the app to your Kubernetes cluster:
       ```bash
-      kubectl apply -f k8s/
+      $ cd backend
+      $ kubectl apply -f .
+     then 
+      $ cd ../ && cd frontend
+      $ kubectl apply -f .
       ```
 
 ## Usage
@@ -103,7 +113,3 @@ We welcome contributions to this project! To contribute:
 4. Commit your changes (`git commit -am 'Add new feature'`).
 5. Push to the branch (`git push origin feature/your-feature`).
 6. Open a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
