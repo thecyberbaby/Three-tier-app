@@ -17,16 +17,6 @@ Welcome to the **Three Tier App** repository! This project is a scalable and mod
 
 The repository is organized into the following directories:
 
-Three-Tier-App/ 
-├── application-code/ # Contains the frontend and backend application code 
-│ ├── frontend/ # Frontend application code 
-│ └── backend/ # Backend application code 
-├── helm/ # Helm charts for deploying infrastructure 
-│ └── <helm-chart-files> 
-├── k8s/ # Kubernetes manifests for deploying the app 
-│ └── <manifest-files> └── README.md # Project documentation
-
-
 ## Application Code
 
 The **`application-code/`** directory contains the code for both the **Frontend** and **Backend** applications:
